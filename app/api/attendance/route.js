@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getAttendance, clearAttendance } from "@/lib/db-mongo.js";
+import { getAttendance, clearAttendance } from "../../../lib/db-mongo";
 
 // GET /api/attendance?date=YYYY-MM-DD&class=Grade+10+-+Section+A&student_id=STU001
 export async function GET(req) {

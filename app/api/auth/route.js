@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { verifyUser, getAllUsers } from "@/lib/db-mongo.js";
+import { verifyUser, getAllUsers } from "../../../lib/db-mongo";
 
 // POST /api/auth
 export async function POST(req) {

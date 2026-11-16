@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getTeachers, registerUser, deleteUser } from "@/lib/db-mongo.js";
+import { getTeachers, registerUser, deleteUser } from "../../../lib/db-mongo";
 
 // GET /api/teachers — list all teachers
 export async function GET() {

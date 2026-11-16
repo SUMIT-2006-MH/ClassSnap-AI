@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { upsertStudent } from "@/lib/db-mongo.js";
+import { upsertStudent } from "../../../lib/db-mongo";
 
 // POST /api/enroll
 export async function POST(req) {

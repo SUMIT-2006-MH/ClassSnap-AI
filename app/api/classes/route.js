@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getAllClasses, createClass, deleteClass } from "@/lib/db-mongo.js";
+import { getAllClasses, createClass, deleteClass } from "../../../lib/db-mongo";
 
 // GET /api/classes — list all classes
 export async function GET() {

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getAllStudents, upsertStudent } from "@/lib/db-mongo.js";
+import { getAllStudents, upsertStudent } from "../../../lib/db-mongo";
 
 // GET /api/students?class=Grade+10+-+Section+A
 export async function GET(req) {

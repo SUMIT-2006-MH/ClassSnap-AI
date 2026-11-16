@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { recordAttendance } from "@/lib/db-mongo.js";
+import { recordAttendance } from "../../../../lib/db-mongo";
 
 // POST /api/attendance/mark
 export async function POST(req) {
