@@ -852,7 +852,7 @@ export default function Home() {
 
       setVerificationFeedback({
         status: "idle",
-        message: `Marked ${currentStudent.name} manually by Teacher.`,
+        message: `Marked ${currentStudent.name} manually present by Teacher.`,
       });
 
       fetchAttendanceRecords();
@@ -862,6 +862,52 @@ export default function Home() {
       }
     } catch {
       alert("Error marking attendance manually.");
+    }
+  };
+
+  const handleMarkAbsentManually = async () => {
+    if (!currentStudent) return;
+    try {
+      await fetch("/api/attendance/mark", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          studentId: currentStudent.id,
+          studentName: currentStudent.name,
+          className: selectedClass,
+          subject: selectedSubject,
+          date: selectedDate,
+          status: "ABSENT",
+          method: "MANUAL",
+          confidence: 0,
+        }),
+      });
+
+      setStudents((prev) =>
+        prev.map((s, idx) =>
+          idx === currentIndex
+            ? {
+                ...s,
+                status: "ABSENT",
+                confidence: undefined,
+                timestamp: new Date().toLocaleTimeString(),
+              }
+            : s
+        )
+      );
+
+      setVerificationFeedback({
+        status: "idle",
+        message: `Marked ${currentStudent.name} as ABSENT by Teacher.`,
+      });
+
+      fetchAttendanceRecords();
+
+      if (currentIndex < students.length - 1) {
+        setCurrentIndex((i) => i + 1);
+      }
+    } catch {
+      alert("Error marking student absent manually.");
     }
   };
 
@@ -2217,15 +2263,25 @@ export default function Home() {
                           disabled={!cameraActive || verifying}
                           className="px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 font-semibold text-xs transition"
                         >
-                          Force Verify This Student
+                          Force Verify
                         </button>
                         {(currentUser?.role === "teacher" || currentUser?.role === "admin") && (
-                          <button
-                            onClick={handleMarkManually}
-                            className="px-3 py-1 rounded-lg bg-amber-600 hover:bg-amber-500 text-white font-semibold text-xs transition"
-                          >
-                            Mark Manually
-                          </button>
+                          <>
+                            <button
+                              onClick={handleMarkManually}
+                              className="px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs transition flex items-center gap-1"
+                              title="Mark selected student Present manually"
+                            >
+                              <span>✓</span> Present
+                            </button>
+                            <button
+                              onClick={handleMarkAbsentManually}
+                              className="px-3 py-1 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-semibold text-xs transition flex items-center gap-1"
+                              title="Mark selected student Absent manually"
+                            >
+                              <span>✗</span> Mark Absent
+                            </button>
+                          </>
                         )}
                       </div>
                     </div>
@@ -2337,6 +2393,39 @@ export default function Home() {
                             <span className="text-xs px-2.5 py-1 rounded-full bg-rose-500/10 text-rose-400 font-semibold border border-rose-500/20">
                               Absent
                             </span>
+                          )}
+
+                          {/* Quick manual Absent / Present toggle buttons for each student */}
+                          {(currentUser?.role === "teacher" || currentUser?.role === "admin") && (
+                            <div className="flex items-center gap-1">
+                              {student.status !== "PRESENT" && student.status !== "PRESENT_MANUAL" ? (
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setCurrentIndex(idx);
+                                    handleMarkManually();
+                                  }}
+                                  className="px-1.5 py-0.5 rounded bg-emerald-950/60 hover:bg-emerald-900 border border-emerald-800 text-[10px] text-emerald-300 font-semibold transition"
+                                  title="Mark Present manually"
+                                >
+                                  +P
+                                </button>
+                              ) : (
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setCurrentIndex(idx);
+                                    handleMarkAbsentManually();
+                                  }}
+                                  className="px-1.5 py-0.5 rounded bg-rose-950/60 hover:bg-rose-900 border border-rose-800 text-[10px] text-rose-300 font-semibold transition"
+                                  title="Mark Absent manually"
+                                >
+                                  +A
+                                </button>
+                              )}
+                            </div>
                           )}
 
                           {/* Quick delete student button */}

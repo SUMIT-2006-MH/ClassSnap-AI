@@ -56,7 +56,7 @@ function initSchema(db: Database.Database) {
       class_name TEXT NOT NULL,
       subject TEXT NOT NULL,
       date TEXT NOT NULL,
-      status TEXT NOT NULL CHECK(status IN ('PRESENT','PRESENT_MANUAL','FAILED_VERIFICATION')),
+      status TEXT NOT NULL CHECK(status IN ('PRESENT','PRESENT_MANUAL','FAILED_VERIFICATION','ABSENT')),
       method TEXT NOT NULL CHECK(method IN ('AUTO','MANUAL')),
       confidence REAL,
       timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -309,7 +309,7 @@ export function recordAttendance(params: {
   className: string;
   subject: string;
   date: string;
-  status: "PRESENT" | "PRESENT_MANUAL" | "FAILED_VERIFICATION";
+  status: "PRESENT" | "PRESENT_MANUAL" | "FAILED_VERIFICATION" | "ABSENT";
   method: "AUTO" | "MANUAL";
   confidence?: number;
 }): void {
